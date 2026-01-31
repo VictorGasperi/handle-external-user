@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Partner Simulado</title>
+</head>
+<body>
+
+<h2>Simular parceiro</h2>
+
+<input id="baseUrl" placeholder="https://SEU_LAMBDA_URL" style="width:400px"><br><br>
+
+<form action="http://localhost:8001/start" method="POST">
+  <input name="email" placeholder="email"><br><br>
+  <input name="password" placeholder="senha" type="password"><br><br>
+  <button type="submit">Enviar</button>
+</form>
+
+<script>
+async function enviar() {
+  const baseUrl = document.getElementById("baseUrl").value.trim();
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+
+  const res = await fetch(baseUrl + "/start", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      email: email,
+      password: password,
+    })
+  });
+
+  const location = res.headers.get("Location");
+
+  if (location) {
+    window.location.href = location;
+  } else {
+    const text = await res.text();
+    alert(text);
+  }
+}
+</script>
+
+</body>
+</html>

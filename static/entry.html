@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Entry</title>
+</head>
+<body>
+
+<h2>Entry Page</h2>
+<div id="output">Carregando...</div>
+
+<script>
+function getQueryParam(name) {
+  const params = new URLSearchParams(window.location.search);
+  return params.get(name);
+}
+
+async function exchangeCode() {
+  const code = getQueryParam("code");
+
+  if (!code) {
+    document.getElementById("output").innerText = "Nenhum code encontrado.";
+    return;
+  }
+
+  try {
+    const res = await fetch("http://localhost:8001/auth/exchange?exchangeable_code=" + code);
+
+    if (!res.ok) {
+      throw new Error("Erro no exchange");
+    }
+
+    const data = await res.json();
+
+    document.getElementById("output").innerText =
+      "Custom token recebido: " + data.token;
+
+    // Aqui futuramente você faria:
+    // await signInWithCustomToken(data.customToken)
+    // window.location.href = data.next;
+
+  } catch (err) {
+    document.getElementById("output").innerText =
+      "Erro: " + err.message;
+  }
+}
+
+exchangeCode();
+</script>
+
+</body>
+</html>
